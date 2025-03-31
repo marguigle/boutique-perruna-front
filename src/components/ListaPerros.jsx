@@ -10,13 +10,10 @@ const ListaPerros = () => {
         const perros = await fetchDogs(); // Llamada a la API
 
         if (Array.isArray(perros)) {
-          // 👈 Validar que es un array antes de setDogs
           setDogs(perros);
         } else {
           console.error("fetchDogs no devolvió un array:", perros);
         }
-
-        // setDogs(perros); // Actualizar el estado con los datos recibidos
       } catch (error) {
         console.error("Error al obtener perros:", error);
       }
@@ -26,18 +23,40 @@ const ListaPerros = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Lista de Perros</h2>
+    <div className="container d-flex flex-wrap gap-4 justify-center ">
       {dogs.length === 0 ? (
-        <p>No hay perros disponibles.</p> // 👈 Mensaje si la lista está vacía
+        <p>No hay perros disponibles.</p>
       ) : (
-        <ul>
-          {dogs.map((dog) => (
-            <li key={dog._id}>
-              {dog.name} - {dog.race}
-            </li>
-          ))}
-        </ul>
+        dogs.map((dog) => (
+          <div
+            className=""
+            style={{
+              width: "40vw",
+              background: "coral",
+              border: "2px solid black",
+              borderRadius: "8px",
+              boxShadow: "5px 10px 10px grey",
+            }}
+            key={dog.id}
+          >
+            <img
+              src="/pug-dog-isolated-white-background.jpg"
+              className="card-img-top "
+              style={{ width: "80px;" }}
+              alt="..."
+            />
+            <div className="card-body">
+              <h5 className="card-title">{dog.name}</h5>{" "}
+              {/* 👈 Corrección aquí */}
+              <p className="card-text">{`Raza: ${dog.race}`} </p>
+              <p className="card-text">{`Dueño: ${dog.owner}`}</p>
+              <p className="card-text">{`Edad: ${dog.age}`}</p>
+              <a href="#" className="btn btn-primary">
+                Go somewhere
+              </a>
+            </div>
+          </div>
+        ))
       )}
     </div>
   );
