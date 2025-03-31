@@ -47,7 +47,7 @@ const Formulario = () => {
         className="d-flex flex-column align-items-center text-center bg-secondary p-4 rounded w-75"
         onSubmit={handleSubmit}
       >
-        <label className="form-label text-info">Nombre:</label>
+        <label className="form-label text-info mt-1">Nombre:</label>
         <input
           type="text"
           value={name}
@@ -55,7 +55,7 @@ const Formulario = () => {
           className="form-control w-75"
           placeholder="Ingresa el nombre"
         />
-        <label className="form-label text-info">Raza:</label>
+        <label className="form-label text-info mt-1">Raza:</label>
         <input
           type="text"
           value={race}
@@ -63,7 +63,7 @@ const Formulario = () => {
           className="form-control w-75"
           placeholder="Ingresa la raza"
         />
-        <label className="form-label text-info">Dueño:</label>
+        <label className="form-label text-info mt-1">Dueño:</label>
         <input
           type="text"
           value={owner}
@@ -71,7 +71,7 @@ const Formulario = () => {
           className="form-control w-75"
           placeholder="Ingresa el nombre del dueño"
         />
-        <label className="form-label text-info">Edad:</label>
+        <label className="form-label text-info mt-1">Edad:</label>
         <input
           type="number"
           value={age}
@@ -79,7 +79,7 @@ const Formulario = () => {
           className="form-control w-75"
           placeholder="Ingresa la edad"
         />
-        <label className="form-label text-info">URL Foto:</label>
+        <label className="form-label text-info mt-1">URL Foto:</label>
         <input
           type="text"
           value={image}
@@ -88,7 +88,7 @@ const Formulario = () => {
           placeholder="Ingresa la URL de la foto"
         />
         <button type="submit" className="btn btn-primary mt-4 w-50">
-          Enviar
+          Agregar
         </button>
       </form>
     </div>
