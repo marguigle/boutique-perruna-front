@@ -45,7 +45,7 @@ const ListaPerros = () => {
     const obtenerPerros = async () => {
       try {
         const perros = await fetchDogs(); // Llamada a la API
-        console.log("Perros recibidos:", perros);
+
         if (Array.isArray(perros)) {
           // 👈 Validar que es un array antes de setDogs
           setDogs(perros);
