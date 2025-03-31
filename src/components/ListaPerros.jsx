@@ -32,10 +32,10 @@ const ListaPerros = () => {
             className=""
             style={{
               width: "40vw",
-              background: "coral",
+              background: "#ffe729",
               border: "2px solid black",
               borderRadius: "8px",
-              boxShadow: "5px 10px 10px grey",
+              boxShadow: "5px 10px 10px #737874",
             }}
             key={dog.id}
           >
@@ -45,7 +45,7 @@ const ListaPerros = () => {
               style={{ width: "80px;" }}
               alt="..."
             />
-            <div className="card-body">
+            <div className=" card-body">
               <h5 className="card-title">{dog.name}</h5>{" "}
               {/* 👈 Corrección aquí */}
               <p className="card-text">{`Raza: ${dog.race}`} </p>
