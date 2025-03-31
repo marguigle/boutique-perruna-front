@@ -4,8 +4,7 @@ export const fetchDogs = async () => {
   try {
     const response = await fetch(API_URL);
     if (!response.ok) throw new Error("Error al obtener los perros");
-    // const dogs = await respuesta.json();
-    // return dogs;
+
     const data = await response.json();
     return data.dogs || [];
   } catch (error) {
