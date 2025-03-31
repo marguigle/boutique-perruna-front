@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const ListaPerros = () => {
   const [dogs, setDogs] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:3000/api/dogs") // Llamar a la API
+    fetch("http://localhost:5000/api/dogs") // Llamar a la API
       .then((res) => res.json())
       .then((data) => setDogs(data.dogs)) // Guardar los datos en el estado
       .catch((error) => console.error("Error al obtener perros:", error));
