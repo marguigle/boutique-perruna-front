@@ -14,6 +14,9 @@ const Formulario = () => {
   const [owner, setOwner] = useState("");
   const [age, setAge] = useState(0);
   const [image, setImage] = useState("");
+  const [vacunado, setVacunado] = useState(false);
+  const [antiparasitario, setAntiparasitario] = useState(false);
+  const [castrado, setCastrado] = useState("");
   const [accion, setAccion] = useState("agregar");
 
   useEffect(() => {
@@ -34,27 +37,70 @@ const Formulario = () => {
       setOwner(dog.owner);
       setAge(dog.age);
       setImage(dog.image);
+      setVacunado(Boolean(dog.vacunado));
+      setAntiparasitario(Boolean(dog.antiparasitario));
+      setCastrado(Boolean(dog.castrado));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !race || !owner || !age || !image) {
+    if (
+      !name ||
+      !race ||
+      !owner ||
+      !age ||
+      !image
+      // !vacunado ||
+      // !antiparasitario ||
+      // !castrado
+    ) {
       alert("❌ Todos los campos son obligatorios.");
       return;
     }
 
-    const nuevoPerro = { name, race, owner, age, image };
+    const nuevoPerro = {
+      name,
+      race,
+      owner,
+      age,
+      image,
+      vacunado,
+      antiparasitario,
+      castrado,
+    };
 
     try {
       let data;
       if (accion === "actualizar" && selectedDog) {
         data = await updateDog(selectedDog._id, nuevoPerro);
+        setSelectedDog(data.newDog); // 🔁 volvemos a llenar el form con el nuevo perro
+        setName(data.newDog.name);
+        setRace(data.newDog.race);
+        setOwner(data.newDog.owner);
+        setAge(data.newDog.age);
+        setImage(data.newDog.image);
+        setVacunado(Boolean(data.newDog.vacunado));
+        setAntiparasitario(Boolean(data.newDog.antiparasitario));
+        setCastrado(Boolean(data.newDog.castrado));
       } else {
         data = await addDog(nuevoPerro);
+        setSelectedDog(null);
+        setName("");
+        setRace("");
+        setOwner("");
+        setAge(0);
+        setImage("");
+        setVacunado(false);
+        setAntiparasitario(false);
+        setCastrado(false);
       }
 
-      alert(`✅ Perro ${accion} con éxito: ${data.name}`);
+      alert(
+        `✅ Éxito al ${accion} al perro: ${
+          data?.newDog?.name || data?.name || name
+        }`
+      );
       setDogs(await fetchDogs()); // Recargar lista de perros
       setSelectedDog(null);
       setName("");
@@ -62,6 +108,9 @@ const Formulario = () => {
       setOwner("");
       setAge(0);
       setImage("");
+      setVacunado(false);
+      setAntiparasitario(false);
+      setCastrado(false);
     } catch (error) {
       alert(`❌ Error: ${error.message}`);
     }
@@ -165,6 +214,32 @@ const Formulario = () => {
           placeholder="Ingresa la URL de la foto"
         />
 
+        <div className="d-flex gap-4">
+          <label className="form-label text-info mt-1 text-start d-inline">
+            Vacunado
+          </label>
+          <input
+            type="checkbox"
+            checked={vacunado}
+            onChange={(e) => setVacunado(e.target.checked)}
+          />
+          <label className="form-label text-info mt-1 text-start d-inline">
+            Antiparasitario
+          </label>
+          <input
+            type="checkbox"
+            checked={antiparasitario}
+            onChange={(e) => setAntiparasitario(e.target.checked)}
+          />
+          <label className="form-label text-info mt-1 text-start d-inline ">
+            Castrado
+          </label>
+          <input
+            type="checkbox"
+            checked={castrado}
+            onChange={(e) => setCastrado(e.target.checked)}
+          />
+        </div>
         <div className="d-flex justify-content-evenly w-100 mt-4">
           <button
             type="submit"

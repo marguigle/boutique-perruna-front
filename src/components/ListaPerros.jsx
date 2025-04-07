@@ -51,6 +51,15 @@ const ListaPerros = () => {
               <p className="card-text">{`Raza: ${dog.race}`} </p>
               <p className="card-text">{`Dueño: ${dog.owner}`}</p>
               <p className="card-text">{`Edad: ${dog.age}`}</p>
+              <p className="card-text">{`Vacunado: ${
+                dog.vacunado ? "Si" : "No"
+              }`}</p>
+              <p className="card-text">{`antiparasitario: ${
+                dog.antiparasitario ? "Si" : "No"
+              }`}</p>
+              <p className="card-text">{`Castrado: ${
+                dog.castrado ? "Si" : "No"
+              }`}</p>
               <a href="#" className="btn btn-primary">
                 Go somewhere
               </a>
