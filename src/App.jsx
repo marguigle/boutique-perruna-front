@@ -6,27 +6,26 @@ import CalculoEstadia from "./components/CalculoEstadia.jsx";
 import Footer from "./components/Footer.jsx";
 import Navbar from "./components/NavBar.jsx";
 import Register from "./pages/Register.jsx";
+import Login from "./pages/Login.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Importa tu Navbar
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 function App() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <AuthProvider>
         <Router>
           <Navbar />
-          <div style={{ padding: "80px 80px" }}>
+          <main className="flex-1 pt-24 pb-12">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/vertodos/estadia" element={<CalculoEstadia />} />
-              {/* <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} /> */}
               <Route path="/edit" element={<Formulario />} />
               <Route path="/vertodos" element={<ListaPerros />} />
               <Route path="/register" element={<Register />} />
-              {/* <Route path="/login" element="login" />
-            <Route path="/profile" element="profile" /> */}
+              <Route path="/login" element={<Login />} />
             </Routes>
-          </div>
+          </main>
           <Footer />
         </Router>
       </AuthProvider>

@@ -1,1 +1,110 @@
 @import "tailwindcss";
+
+/* Reset y estilos globales */
+* {
+  scroll-behavior: smooth;
+}
+
+html {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #d1d0cf 0%, #fefefc 100%);
+  color: #4f3020;
+}
+
+/* Desaparecer scrollbar vertical en Chrome, Edge y Safari */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #f5ede3;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #f5a025;
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #f97316;
+}
+
+/* Animaciones globales */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Transiciones suaves por defecto */
+a,
+button {
+  transition: all 0.3s ease-in-out;
+}
+
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+/* Carousel styling - prevent overlapping images */
+.carousel {
+  position: relative;
+  z-index: 1;
+}
+
+.carousel-item {
+  display: block !important;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-item.active {
+  opacity: 1;
+}
+
+.carousel-inner {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-inner .carousel-item {
+  position: relative;
+  display: none;
+  float: left;
+  width: 100%;
+  margin-right: -100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.carousel-inner .carousel-item.active,
+.carousel-inner .carousel-item-next,
+.carousel-inner .carousel-item-prev {
+  display: block;
+}

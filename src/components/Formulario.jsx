@@ -19,6 +19,8 @@ const Formulario = () => {
   const [antiparasitario, setAntiparasitario] = useState(false);
   const [castrado, setCastrado] = useState("");
   const [accion, setAccion] = useState("agregar");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const obtenerPerros = async () => {
@@ -46,17 +48,11 @@ const Formulario = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !name ||
-      !race ||
-      !owner ||
-      !age ||
-      !image
-      // !vacunado ||
-      // !antiparasitario ||
-      // !castrado
-    ) {
-      alert("❌ Todos los campos son obligatorios.");
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (!name || !race || !owner || !age || !image) {
+      setErrorMessage("❌ Todos los campos son obligatorios.");
       return;
     }
 
@@ -75,7 +71,7 @@ const Formulario = () => {
       let data;
       if (accion === "actualizar" && selectedDog) {
         data = await updateDog(selectedDog._id, nuevoPerro);
-        setSelectedDog(data.newDog); // 🔁 volvemos a llenar el form con el nuevo perro
+        setSelectedDog(data.newDog);
         setName(data.newDog.name);
         setRace(data.newDog.race);
         setOwner(data.newDog.owner);
@@ -97,12 +93,10 @@ const Formulario = () => {
         setCastrado(false);
       }
 
-      alert(
-        `✅ Éxito al ${accion} al perro: ${
-          data?.newDog?.name || data?.name || name
-        }`
+      setSuccessMessage(
+        `✅ Éxito al ${accion} al perro: ${data?.newDog?.name || data?.name || name}`,
       );
-      setDogs(await fetchDogs()); // Recargar lista de perros
+      setDogs(await fetchDogs());
       setSelectedDog(null);
       setName("");
       setRace("");
@@ -113,20 +107,23 @@ const Formulario = () => {
       setAntiparasitario(false);
       setCastrado(false);
     } catch (error) {
-      alert(`❌ Error: ${error.message}`);
+      setErrorMessage(`❌ Error: ${error.message}`);
     }
   };
 
   const handleDelete = async () => {
+    setErrorMessage("");
+    setSuccessMessage("");
+
     if (!selectedDog) {
-      alert("❌ Debes seleccionar un perro para eliminar.");
+      setErrorMessage("❌ Debes seleccionar un perro para eliminar.");
       return;
     }
 
     try {
       await deleteDog(selectedDog._id);
-      alert(`✅ Perro eliminado con éxito`);
-      setDogs(await fetchDogs()); // Recargar lista
+      setSuccessMessage(`✅ Perro eliminado con éxito`);
+      setDogs(await fetchDogs());
       setSelectedDog(null);
       setName("");
       setRace("");
@@ -134,128 +131,216 @@ const Formulario = () => {
       setAge(0);
       setImage("");
     } catch (error) {
-      alert(`❌ Error: ${error.message}`);
+      setErrorMessage(`❌ Error: ${error.message}`);
     }
   };
 
   return (
-    <div className="bg-gray-300 flex justify-center rounded-2xl">
-      <form className="flex flex-col m-3" onSubmit={handleSubmit}>
-        {/* <label className=" text-center">Seleccionar un perro:</label> */}
-        <select
-          className="rounded-md bg-white px-2 py-1.5 m-2 "
-          onChange={handleSelectDog}
-          value={selectedDog ? selectedDog._id : ""}
-        >
-          <option value="">-- seleccionar Perro --</option>
-          {dogs.map((dog) => (
-            <option key={dog._id} value={dog._id}>
-              {dog.name}
-            </option>
-          ))}
-        </select>
+    <div className="min-h-screen bg-gradient-soft py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12 animate-fade-in">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-beige-600 to-orange-600 bg-clip-text text-transparent mb-4">
+            Gestionar Huéspedes
+          </h1>
+          <p className="text-xl text-warm-700">
+            Agrega, edita o elimina información de perros
+          </p>
+        </div>
 
-        {/* <label className="text-center">Nombre:</label> */}
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="rounded-md bg-white px-2 py-1.5 m-2 "
-          placeholder="Ingresa el nombre"
-        />
-
-        {/* <label className="text-center">Raza:</label> */}
-        <input
-          type="text"
-          value={race}
-          onChange={(e) => setRace(e.target.value)}
-          className="rounded-md bg-white px-2 py-1.5 m-2 "
-          placeholder="Ingresa la raza"
-        />
-
-        {/* <label className="text-center">Dueño:</label> */}
-        <input
-          type="text"
-          value={owner}
-          onChange={(e) => setOwner(e.target.value)}
-          className="rounded-md bg-white px-2 py-1.5 m-2 "
-          placeholder="Ingresa el nombre del dueño"
-        />
-
-        {/* <label className="text-center">Edad:</label> */}
-        <input
-          type="number"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          className="rounded-md bg-white px-2 py-1.5 m-2 "
-          placeholder="Ingresa la edad"
-        />
-
-        {/* <label className="text-center"> Arrastra la foto </label> */}
-        {/*    <input
-          type="text"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          className="form-control w-75"
-          placeholder="Ingresa la URL de la foto"
-        /> */}
-
-        <DropzoneUploader setImage={setImage} />
-        {image && (
-          <img
-            src={image}
-            alt="preview"
-            className="mt-3"
-            style={{ width: "100px" }}
-          />
+        {/* Mensajes */}
+        {successMessage && (
+          <div className="mb-6 bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded-lg animate-slide-up">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg animate-slide-up">
+            {errorMessage}
+          </div>
         )}
 
-        <div className="flex gap-4 my-4">
-          <label className="">Vacunado</label>
-          <input
-            type="checkbox"
-            checked={vacunado}
-            onChange={(e) => setVacunado(e.target.checked)}
-          />
-          <label className="">Antiparasitario</label>
-          <input
-            type="checkbox"
-            checked={antiparasitario}
-            onChange={(e) => setAntiparasitario(e.target.checked)}
-          />
-          <label className=" ">Castrado</label>
-          <input
-            type="checkbox"
-            checked={castrado}
-            onChange={(e) => setCastrado(e.target.checked)}
-          />
+        {/* Card del formulario */}
+        <div className="bg-white rounded-3xl shadow-elevated overflow-hidden backdrop-blur-sm bg-white/95 p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Selector de perro */}
+            <div>
+              <label className="block text-sm font-bold text-beige-700 mb-2">
+                Seleccionar Perro (para editar)
+              </label>
+              <select
+                className="w-full px-4 py-3 rounded-xl border-2 border-warm-200 bg-warm-50 focus:border-beige-500 focus:bg-white transition-all duration-300 font-medium"
+                onChange={handleSelectDog}
+                value={selectedDog ? selectedDog._id : ""}
+              >
+                <option value="">-- Seleccionar Perro --</option>
+                {dogs.map((dog) => (
+                  <option key={dog._id} value={dog._id}>
+                    {dog.name} ({dog.race})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Grid de formulario */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Nombre */}
+              <div>
+                <label className="block text-sm font-bold text-beige-700 mb-2">
+                  Nombre 🐕
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-warm-200 bg-warm-50 focus:border-beige-500 focus:bg-white transition-all duration-300 font-medium"
+                  placeholder="Nombre del perro"
+                />
+              </div>
+
+              {/* Raza */}
+              <div>
+                <label className="block text-sm font-bold text-beige-700 mb-2">
+                  Raza 🦴
+                </label>
+                <input
+                  type="text"
+                  value={race}
+                  onChange={(e) => setRace(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-warm-200 bg-warm-50 focus:border-beige-500 focus:bg-white transition-all duration-300 font-medium"
+                  placeholder="Ej: Labrador, Pastor Alemán"
+                />
+              </div>
+
+              {/* Dueño */}
+              <div>
+                <label className="block text-sm font-bold text-beige-700 mb-2">
+                  Dueño 👤
+                </label>
+                <input
+                  type="text"
+                  value={owner}
+                  onChange={(e) => setOwner(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-warm-200 bg-warm-50 focus:border-beige-500 focus:bg-white transition-all duration-300 font-medium"
+                  placeholder="Nombre del dueño"
+                />
+              </div>
+
+              {/* Edad */}
+              <div>
+                <label className="block text-sm font-bold text-beige-700 mb-2">
+                  Edad 🎂
+                </label>
+                <input
+                  type="number"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-warm-200 bg-warm-50 focus:border-beige-500 focus:bg-white transition-all duration-300 font-medium"
+                  placeholder="Años"
+                  min="0"
+                  max="50"
+                />
+              </div>
+            </div>
+
+            {/* Foto */}
+            <div>
+              <label className="block text-sm font-bold text-beige-700 mb-2">
+                Foto 📸
+              </label>
+              <DropzoneUploader setImage={setImage} />
+              {image && (
+                <div className="mt-4">
+                  <img
+                    src={image}
+                    alt="preview"
+                    className="w-32 h-32 object-cover rounded-xl shadow-soft"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Checkboxes */}
+            <div className="bg-warm-50 p-6 rounded-xl space-y-3">
+              <h3 className="font-bold text-beige-700 mb-4">
+                Estado de Salud ✨
+              </h3>
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="vacunado"
+                  checked={vacunado}
+                  onChange={(e) => setVacunado(e.target.checked)}
+                  className="w-5 h-5 rounded-md"
+                />
+                <label
+                  htmlFor="vacunado"
+                  className="text-warm-700 font-medium cursor-pointer"
+                >
+                  Vacunado 💉
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="antiparasitario"
+                  checked={antiparasitario}
+                  onChange={(e) => setAntiparasitario(e.target.checked)}
+                  className="w-5 h-5 rounded-md"
+                />
+                <label
+                  htmlFor="antiparasitario"
+                  className="text-warm-700 font-medium cursor-pointer"
+                >
+                  Desparasitado 🛡️
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="castrado"
+                  checked={castrado}
+                  onChange={(e) => setCastrado(e.target.checked)}
+                  className="w-5 h-5 rounded-md"
+                />
+                <label
+                  htmlFor="castrado"
+                  className="text-warm-700 font-medium cursor-pointer"
+                >
+                  Castrado ♥️
+                </label>
+              </div>
+            </div>
+
+            {/* Botones */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-6">
+              <button
+                type="submit"
+                onClick={() => setAccion("agregar")}
+                className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-soft"
+              >
+                ✓ Agregar
+              </button>
+              <button
+                type="submit"
+                onClick={() => setAccion("actualizar")}
+                disabled={!selectedDog}
+                className="flex-1 bg-gradient-button hover:shadow-warm text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                ✏️ Actualizar
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={!selectedDog}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                🗑️ Eliminar
+              </button>
+            </div>
+          </form>
         </div>
-        <div className=" flex justify-around">
-          <button
-            type="submit"
-            className="bg-green-500 m-1 p-2 rounded-md"
-            onClick={() => setAccion("agregar")}
-          >
-            Agregar
-          </button>
-          <button
-            type="submit"
-            className="bg-amber-400 m-1 p-2 rounded-md"
-            onClick={() => setAccion("actualizar")}
-            disabled={!selectedDog}
-          >
-            Actualizar
-          </button>
-          <button
-            type="button"
-            className="bg-red-500 m-1 p-2 rounded-md"
-            onClick={handleDelete}
-            disabled={!selectedDog}
-          >
-            Eliminar
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };

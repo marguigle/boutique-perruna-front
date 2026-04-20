@@ -1,24 +1,17 @@
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
-import { useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function Register() {
+const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signup, isAutenticated, errors: RegisterErrors } = useAuth();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isAutenticated) navigate("/edit");
-  }, [isAutenticated, navigate]);
+  const { signin, errors: SigninErrors } = useAuth();
 
-  const onSubmit = handleSubmit(async (values) => {
-    signup(values);
-  });
+  const onSubmit = handleSubmit(async (data) => signin(data));
 
   return (
     <div className="min-h-screen bg-gradient-soft flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -29,19 +22,19 @@ function Register() {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <div className="w-16 h-16 bg-gradient-warm rounded-full flex items-center justify-center shadow-warm">
-                <span className="text-3xl">📝</span>
+                <span className="text-3xl">🐕</span>
               </div>
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-beige-600 to-orange-600 bg-clip-text text-transparent mb-2">
-              Crear Cuenta
+              Iniciar Sesión
             </h1>
-            <p className="text-warm-600">Únete a nuestra comunidad</p>
+            <p className="text-warm-600">Accede a tu cuenta</p>
           </div>
 
           {/* Errores */}
-          {RegisterErrors && RegisterErrors.length > 0 && (
+          {Array.isArray(SigninErrors) && SigninErrors.length > 0 && (
             <div className="mb-6 space-y-2">
-              {RegisterErrors.map((error, i) => (
+              {SigninErrors.map((error, i) => (
                 <div
                   key={i}
                   className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg text-sm font-medium"
@@ -54,30 +47,6 @@ function Register() {
 
           {/* Formulario */}
           <form onSubmit={onSubmit} className="space-y-5">
-            {/* Username */}
-            <div>
-              <label className="block text-sm font-bold text-beige-700 mb-2">
-                Nombre de Usuario
-              </label>
-              <input
-                type="text"
-                {...register("username", {
-                  required: "El nombre de usuario es requerido",
-                  minLength: {
-                    value: 3,
-                    message: "Mínimo 3 caracteres",
-                  },
-                })}
-                placeholder="tu_usuario"
-                className="w-full px-4 py-3 rounded-xl border-2 border-warm-200 bg-warm-50 focus:border-beige-500 focus:bg-white transition-all duration-300 font-medium"
-              />
-              {errors.username && (
-                <p className="text-red-500 text-sm font-semibold mt-2 flex items-center gap-1">
-                  ✗ {errors.username.message}
-                </p>
-              )}
-            </div>
-
             {/* Email */}
             <div>
               <label className="block text-sm font-bold text-beige-700 mb-2">
@@ -131,7 +100,7 @@ function Register() {
               type="submit"
               className="w-full bg-gradient-button hover:shadow-warm text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-soft mt-6"
             >
-              Registrarse
+              Ingresar
             </button>
           </form>
 
@@ -142,20 +111,20 @@ function Register() {
             <div className="flex-grow border-t border-warm-200"></div>
           </div>
 
-          {/* Login */}
+          {/* Registro */}
           <p className="text-center text-warm-700 text-sm">
-            ¿Ya tienes cuenta?{" "}
+            ¿No tienes cuenta?{" "}
             <Link
-              to="/login"
+              to="/register"
               className="font-bold text-beige-600 hover:text-orange-600 transition-colors duration-300 no-underline"
             >
-              Inicia sesión aquí
+              Regístrate aquí
             </Link>
           </p>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Register;
+export default Login;
